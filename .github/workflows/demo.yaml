@@ -29,13 +29,17 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dist-files
-          path: |
-            dist
-            package.json
+          path: dist
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Get build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+      - name: Output the artefact contents
+        run: ls
       - name: Deploy to host
         run: echo "Deploying to cloud host..."
 
