@@ -48,7 +48,7 @@ jobs:
       - name: Output the artefact contents
         run: ls
       - name: Output JS filename
-        run: echo "{{ needs.build.outputs.script-file }}"
+        run: echo "${{ needs.build.outputs.script-file }}"
       - name: Deploy to host
         run: echo "Deploying to cloud host..."
 
