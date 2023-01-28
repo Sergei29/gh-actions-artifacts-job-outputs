@@ -18,6 +18,8 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    outputs:
+      script-file: "{{ steps.publish.outputs.my-value }}"
     steps:
       - name: Get Code
         uses: actions/checkout@v3
@@ -25,6 +27,11 @@ jobs:
         run: npm ci
       - name: Build Project
         run: npm run build
+      - name: Publish JS Filename
+        id: publish
+        run: find dist/assets/*.js -type f -execdir echo 'my-value={}' >> $GITHUB_OUTPUT ';'
+        # alternatively, in older versions:
+        # run: find dist/assets/*.js -type f -execdir echo '::set-output name=my-value::{}' ';'
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -40,6 +47,8 @@ jobs:
           name: dist-files
       - name: Output the artefact contents
         run: ls
+      - name: Output JS filename
+        run: echo "{{ needs.build.outputs.script-file }}"
       - name: Deploy to host
         run: echo "Deploying to cloud host..."
 
